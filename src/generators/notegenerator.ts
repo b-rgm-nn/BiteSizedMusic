@@ -2,8 +2,9 @@ import { GeneratorResult } from './problemgenerators.js';
 
 export type Note = {
   name: string;
-  octave: number;
-}
+  number: number;
+  clef: 'treble' | 'bass';
+};
 
 export function toNoteNumber(noteName: string): number {
   let noteIndex = 'CDEFGAB'.indexOf(noteName.charAt(0));
@@ -18,26 +19,29 @@ export function toNoteName(noteNumber: number): string {
   return noteNames[noteIndex] + octave;
 }
 
-function generateNote(minNoteName: string, maxNoteName: string): GeneratorResult {
+function generateNote(minNoteName: string, maxNoteName: string, clef: 'treble' | 'bass'): GeneratorResult {
   const notePosition = Math.floor(Math.random() * (toNoteNumber(maxNoteName) - toNoteNumber(minNoteName) + 1)) + toNoteNumber(minNoteName);
-  console.log(notePosition + ' ' + toNoteName(notePosition) + ' range: ' + toNoteNumber(minNoteName) + '-' + toNoteNumber(maxNoteName));
   return {
     title: 'Notes',
-    note: toNoteName(notePosition),
+    note: {
+      name: toNoteName(notePosition),
+      number: notePosition,
+      clef: clef,
+    },
     answer: toNoteName(notePosition),
   };
 }
 
-export function generateBasicNotes(): GeneratorResult {
+export function generateBassNotes(): GeneratorResult {
   return {
-    ...generateNote('C2', 'C4'),
-    title: 'Basic Notes',
+    ...generateNote('C2', 'C4', 'bass'),
+    title: 'Bass Notes',
   };
 }
 
-export function generateExtendedNotes(): GeneratorResult {
+export function generateTrebleNotes(): GeneratorResult {
   return {
-    ...generateNote('G1', 'G4'),
-    title: 'Extended Notes',
+    ...generateNote('C4', 'C6', 'treble'),
+    title: 'Treble Notes',
   };
 }

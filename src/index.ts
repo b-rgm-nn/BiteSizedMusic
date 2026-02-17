@@ -6,7 +6,7 @@ import {
   generatorConfig,
 } from './generators/problemgenerators.js';
 
-import { toNoteNumber } from './generators/notegenerator.js';
+import { Note, toNoteNumber } from './generators/notegenerator.js';
 
 import { getStats, recordPlayed } from './stats.js';
 import Cookies from 'js-cookie';
@@ -27,7 +27,8 @@ async function renderRandom() {
   initRandom();
 
   if (generators().length == 0) {
-    document.querySelector('[data-generated="title"]')!.innerHTML = 'No categories selected';
+    document.querySelector('[data-generated="title"]')!.innerHTML =
+      'No categories selected';
     return;
   }
 
@@ -38,7 +39,7 @@ async function renderRandom() {
   });
 
   // Draw the bass clef staff with the note
-  drawBassClefNote(generated.note);
+  drawNote(generated.note);
 
   document.getElementById('problemId')!.innerHTML =
     `Problem ID: ${getProblemId()}`;
@@ -56,17 +57,16 @@ async function renderRandom() {
     );
 }
 
-function drawBassClefNote(note: any) {
+function drawNote(note: Note) {
   const svg = document.getElementById('staffSvg') as unknown as SVGSVGElement;
   svg.innerHTML = '';
-  
+
+  const svgWidth = svg.clientWidth;
+
   const staffY = 80; // Top of staff
   const lineSpacing = 15; // Space between staff lines
   const clefX = 30;
-  const noteX = 200;
 
-  const linePosition = toNoteNumber(note) - toNoteNumber('G2'); // G2 is the bottom line (linePosition 0)
-  
   // Draw staff lines
   for (let i = 0; i < 5; i++) {
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -78,26 +78,31 @@ function drawBassClefNote(note: any) {
     line.setAttribute('stroke-width', '2');
     svg.appendChild(line);
   }
-  
+
   // Draw bass clef symbol (simplified)
   const clef = document.createElementNS('http://www.w3.org/2000/svg', 'text');
   clef.setAttribute('x', String(clefX));
-  clef.setAttribute('y', String(staffY + 45));
+  clef.setAttribute('y', String(staffY + 55));
   clef.setAttribute('font-size', '70');
   clef.setAttribute('fill', 'white');
   clef.setAttribute('font-family', 'serif');
-  clef.textContent = '𝄢';
+  clef.textContent = note.clef === 'bass' ? '𝄢' : '𝄞';
   svg.appendChild(clef);
-  
-  // Calculate note Y position based on linePosition
-  // linePosition 0 = bottom line (G2), position 8 = top ledger line (A3)
+
+  const baseNoteNumber = note.clef === 'bass' ? toNoteNumber('G2') : toNoteNumber('E4'); // bottom line (linePosition 0)
+
+  const linePosition = note.number - baseNoteNumber; 
+  const noteX = clefX + clef.getBBox().width + (svgWidth - clefX - clef.getBBox().width) / 2;
   const noteY = staffY + (8 - linePosition) * (lineSpacing / 2);
-  
+
   // Draw ledger lines if needed
   if (linePosition > 8) {
     // Above staff
     for (let i = 10; i <= linePosition; i += 2) {
-      const ledger = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      const ledger = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'line',
+      );
       const ledgerY = staffY + (8 - i) * (lineSpacing / 2);
       ledger.setAttribute('x1', String(noteX - 20));
       ledger.setAttribute('x2', String(noteX + 20));
@@ -110,7 +115,10 @@ function drawBassClefNote(note: any) {
   } else if (linePosition < 0) {
     // Below staff
     for (let i = -2; i >= linePosition; i -= 2) {
-      const ledger = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      const ledger = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'line',
+      );
       const ledgerY = staffY + (8 - i) * (lineSpacing / 2);
       ledger.setAttribute('x1', String(noteX - 20));
       ledger.setAttribute('x2', String(noteX + 20));
@@ -121,9 +129,12 @@ function drawBassClefNote(note: any) {
       svg.appendChild(ledger);
     }
   }
-  
+
   // Draw note head (filled circle)
-  const noteHead = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+  const noteHead = document.createElementNS(
+    'http://www.w3.org/2000/svg',
+    'ellipse',
+  );
   noteHead.setAttribute('cx', String(noteX));
   noteHead.setAttribute('cy', String(noteY));
   noteHead.setAttribute('rx', '10');
@@ -131,7 +142,7 @@ function drawBassClefNote(note: any) {
   noteHead.setAttribute('fill', 'white');
   noteHead.setAttribute('transform', `rotate(-20 ${noteX} ${noteY})`);
   svg.appendChild(noteHead);
-  
+
   // Draw note stem
   const stem = document.createElementNS('http://www.w3.org/2000/svg', 'line');
   stem.setAttribute('x1', String(noteX + 9));

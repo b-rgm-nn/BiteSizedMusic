@@ -1,19 +1,20 @@
 import { cookiesSetSafe } from '../stats.js';
 import Cookies from 'js-cookie';
 import {
-  generateBasicNotes,
-  generateExtendedNotes,
+  generateBassNotes,
+  generateTrebleNotes,
+  Note,
 } from './notegenerator.js';
 
 export type GeneratorResult = {
   title: string;
-  note: string;
+  note: Note;
   answer: string;
 };
 
 export const generatorConfig = {
-  a: { generators: [generateBasicNotes], name: 'Basic Notes (C2-C4)' },
-  b: { generators: [generateExtendedNotes], name: 'Extended Range (G1-G4)' },
+  b: { generators: [generateBassNotes], name: 'Bass clef (C2-C4)' },
+  t: { generators: [generateTrebleNotes], name: 'Treble clef (C4-C6)' },
 };
 
 export function generators() {
