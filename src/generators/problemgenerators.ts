@@ -1,47 +1,19 @@
 import { cookiesSetSafe } from '../stats.js';
 import Cookies from 'js-cookie';
 import {
-  generateCondicional,
-  generateCondicionalPerfecto,
-  generateFuturo,
-  generateFuturoPerfecto,
-  generateImperativoAfirmativo,
-  generateImperfecto,
-  generatePluscuamperfecto,
-  generatePresente,
-  generatePresentePerfecto,
-  generatePreterito,
-  generatePreteritoAnterior,
-} from './verbgenerator.js';
+  generateBasicNotes,
+  generateExtendedNotes,
+} from './notegenerator.js';
 
 export type GeneratorResult = {
-  tense: string;
-  form: string;
-  verb: string;
-  conjugation: string;
-  english: string;
-  allForms: any;
+  title: string;
+  note: string;
+  answer: string;
 };
 
 export const generatorConfig = {
-  a: { generators: [generatePresente], name: 'Presente' },
-  b: { generators: [generateFuturo], name: 'Futuro' },
-  c: { generators: [generateImperfecto], name: 'Imperfecto' },
-  d: { generators: [generatePreterito], name: 'Pretérito' },
-  e: { generators: [generateCondicional], name: 'Condicional' },
-  f: { generators: [generatePresentePerfecto], name: 'Presente perfecto' },
-  g: { generators: [generateFuturoPerfecto], name: 'Futuro perfecto' },
-  h: { generators: [generatePluscuamperfecto], name: 'Pluscuamperfecto' },
-  i: { generators: [generatePreteritoAnterior], name: 'Pretérito anterior' },
-  j: {
-    generators: [generateCondicionalPerfecto],
-    name: 'Condicional perfecto',
-  },
-  k: {
-    generators: [generateImperativoAfirmativo],
-    name: 'Imperativo afirmativo',
-  },
-  v: { generators: [], name: 'Include vosotros' },
+  a: { generators: [generateBasicNotes], name: 'Basic Notes (C2-C4)' },
+  b: { generators: [generateExtendedNotes], name: 'Extended Range (G1-G4)' },
 };
 
 export function generators() {
@@ -70,7 +42,7 @@ initFilter();
 export function getSelectedCategories() {
   let filter = new Set();
   for (let key of (
-    Cookies.get('filter') ?? 'abcv'
+    Cookies.get('filter') ?? 'ab'
   ).split('')) {
     if (Object.keys(generatorConfig).includes(key)) filter.add(key);
   }

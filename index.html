@@ -3,11 +3,11 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Bite Sized Spanish" />
-    <meta name="keywords" content="Spanish, Verbs, Conjugation" />
+    <meta name="description" content="Bite Sized Music" />
+    <meta name="keywords" content="Music, Notes, Bass Clef, Reading" />
     <meta name="author" content="Matthias Bergmann" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bite Sized Spanish</title>
+    <title>Bite Sized Music</title>
 
     <link href="/src/style.css" rel="stylesheet" />
 
@@ -74,43 +74,16 @@
       <div id="stats" class="text-start"></div>
 
       <div class="flex justify-center gap-4 md:gap-8">
-        <div data-generated="tense" class="text-xl md:text-3xl"></div>
-      <div
-        class="aspect-square cursor-pointer content-center rounded-md border text-xs md:text-lg font-mono font-bold"
-        onclick="document.getElementById('explanation').showModal()">></div>
-      <dialog
-        id="explanation"
-        onclick="document.getElementById('explanation').close()"
-        class="pointer rounded-lg border bg-black p-4 text-white backdrop:bg-black/60">
-        <div
-          class="mx-auto my-8 grid w-fit grid-cols-2 rounded-lg border border-white">
-          <div class="border-r border-b border-white p-4 font-bold text-lg" data-generated="tense"></div>
-          <div class="border-l border-b border-white p-4 font-bold text-lg" data-form-ending="type"></div>
-          <div class="border border-gray-500 p-4">yo</div>
-          <div class="border border-gray-500 p-4" data-form-ending="form_1s"></div>
-          <div class="border border-gray-500 p-4">tú</div>
-          <div class="border border-gray-500 p-4" data-form-ending="form_2s"></div>
-          <div class="border border-gray-500 p-4">él, ella, usted</div>
-          <div class="border border-gray-500 p-4" data-form-ending="form_3s"></div>
-          <div class="border border-gray-500 p-4">nosotros/as</div>
-          <div class="border border-gray-500 p-4" data-form-ending="form_1p"></div>
-          <div class="border border-gray-500 p-4">vosotros/as</div>
-          <div class="border border-gray-500 p-4" data-form-ending="form_2p"></div>
-          <div class="border-r border-t border-gray-500 p-4">ellos/as, ustedes</div>
-          <div class="border-l border-t border-gray-500 p-4" data-form-ending="form_3p"></div>
-        </div>
-    </dialog>
+        <div data-generated="title" class="text-xl md:text-3xl"></div>
       </div>
 
       <div class="flex justify-center gap-4 md:gap-8">
-        <div
-          data-generated="form"
-          class="font-serif text-2xl text-gray-400 md:text-5xl"></div>
-        <div data-generated="verb" class="font-serif text-2xl md:text-5xl"></div>
+        <div id="noteDisplay" class="flex flex-col items-center">
+          <svg id="staffSvg" width="400" height="250" class="mx-auto"></svg>
+        </div>
       </div>
-      <div data-generated="english" class="text-l text-gray-400 md:text-xl"></div>
       <div
-        data-generated="conjugation"
+        data-generated="answer"
         data-is-solution
         class="hidden font-serif text-2xl text-green-300 md:text-5xl"></div>
       <div id="actions">
@@ -152,25 +125,6 @@
             </svg>
           </button>
         </div>
-        <div
-          data-is-solution
-          class="mx-auto my-8 grid hidden w-fit grid-cols-2 rounded-lg border border-white">
-          <div
-            class="border-b border-white p-4 font-bold col-span-2"
-            data-generated="verb"></div>
-          <div class="border border-gray-500 p-4">yo</div>
-          <div class="border border-gray-500 p-4" data-form="form_1s"></div>
-          <div class="border border-gray-500 p-4">tú</div>
-          <div class="border border-gray-500 p-4" data-form="form_2s"></div>
-          <div class="border border-gray-500 p-4">él, ella, usted</div>
-          <div class="border border-gray-500 p-4" data-form="form_3s"></div>
-          <div class="border border-gray-500 p-4">nosotros/as</div>
-          <div class="border border-gray-500 p-4" data-form="form_1p"></div>
-          <div class="border border-gray-500 p-4">vosotros/as</div>
-          <div class="border border-gray-500 p-4" data-form="form_2p"></div>
-          <div class="border-r border-t border-gray-500 p-4">ellos/as, ustedes</div>
-          <div class="border-l border-t border-gray-500 p-4" data-form="form_3p"></div>
-        </div>
       </div>
 
       <div id="problemId" class="text-start text-gray-500"></div>
@@ -182,19 +136,18 @@
     <footer class="grid gap-2 text-sm text-gray-500 md:gap-0">
       <div>Created By Matthias Bergmann</div>
       <div>Also check out <a href="https://bitesizedmath.github.io" class="underline">BiteSizedMath</a></div>
-      <div>Thanks to Fred Jehle and @ghidinelli for the <a href="https://github.com/ghidinelli/fred-jehle-spanish-verbs/tree/master" class="underline">list of spanish verbs</a></div>
       <div>
         Want to report an issue or request a feature?
         <a
           id="ghIssueLink"
-          href="https://github.com/BiteSizedSpanish/BiteSizedSpanish.github.io/issues"
+          href="https://github.com/BiteSizedMusic/BiteSizedMusic.github.io/issues"
           class="underline">
           Click here</a
         >
         or
         <a
           id="mailToLink"
-          href="mailto:bergmannmatthias1+bitesizedspanish@gmail.com"
+          href="mailto:bergmannmatthias1+bitesizedmusic@gmail.com"
           class="underline">
           send me an email</a
         >
