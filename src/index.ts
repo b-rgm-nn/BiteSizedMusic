@@ -6,10 +6,9 @@ import {
   generatorConfig,
 } from './generators/problemgenerators.js';
 
-import { Note, toNoteNumber } from './generators/notegenerator.js';
-
 import { getStats, recordPlayed } from './stats.js';
 import Cookies from 'js-cookie';
+import { drawNote } from './noterendering.js';
 
 declare global {
   interface Window {
@@ -39,7 +38,7 @@ async function renderRandom() {
   });
 
   // Draw the bass clef staff with the note
-  drawNote(generated.note);
+  drawNote(generated.note, document.getElementById('staffSvg') as unknown as SVGSVGElement);
 
   document.getElementById('problemId')!.innerHTML =
     `Problem ID: ${getProblemId()}`;
@@ -55,103 +54,6 @@ async function renderRandom() {
       'href',
       `mailto:bergmannmatthias1+bitesizedmusic@gmail.com?subject=${encodeURIComponent(`Problem ID: ${getProblemId()}`)}`,
     );
-}
-
-function drawNote(note: Note) {
-  const svg = document.getElementById('staffSvg') as unknown as SVGSVGElement;
-  svg.innerHTML = '';
-
-  const svgWidth = svg.clientWidth;
-
-  const staffY = 80; // Top of staff
-  const lineSpacing = 15; // Space between staff lines
-  const clefX = 30;
-
-  // Draw staff lines
-  for (let i = 0; i < 5; i++) {
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', '20');
-    line.setAttribute('x2', '380');
-    line.setAttribute('y1', String(staffY + i * lineSpacing));
-    line.setAttribute('y2', String(staffY + i * lineSpacing));
-    line.setAttribute('stroke', 'white');
-    line.setAttribute('stroke-width', '2');
-    svg.appendChild(line);
-  }
-
-  // Draw bass clef symbol (simplified)
-  const clef = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  clef.setAttribute('x', String(clefX));
-  clef.setAttribute('y', String(staffY + 55));
-  clef.setAttribute('font-size', '70');
-  clef.setAttribute('fill', 'white');
-  clef.setAttribute('font-family', 'serif');
-  clef.textContent = note.clef === 'bass' ? '𝄢' : '𝄞';
-  svg.appendChild(clef);
-
-  const baseNoteNumber = note.clef === 'bass' ? toNoteNumber('G2') : toNoteNumber('E4'); // bottom line (linePosition 0)
-
-  const linePosition = note.number - baseNoteNumber; 
-  const noteX = clefX + clef.getBBox().width + (svgWidth - clefX - clef.getBBox().width) / 2;
-  const noteY = staffY + (8 - linePosition) * (lineSpacing / 2);
-
-  // Draw ledger lines if needed
-  if (linePosition > 8) {
-    // Above staff
-    for (let i = 10; i <= linePosition; i += 2) {
-      const ledger = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'line',
-      );
-      const ledgerY = staffY + (8 - i) * (lineSpacing / 2);
-      ledger.setAttribute('x1', String(noteX - 20));
-      ledger.setAttribute('x2', String(noteX + 20));
-      ledger.setAttribute('y1', String(ledgerY));
-      ledger.setAttribute('y2', String(ledgerY));
-      ledger.setAttribute('stroke', 'white');
-      ledger.setAttribute('stroke-width', '2');
-      svg.appendChild(ledger);
-    }
-  } else if (linePosition < 0) {
-    // Below staff
-    for (let i = -2; i >= linePosition; i -= 2) {
-      const ledger = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'line',
-      );
-      const ledgerY = staffY + (8 - i) * (lineSpacing / 2);
-      ledger.setAttribute('x1', String(noteX - 20));
-      ledger.setAttribute('x2', String(noteX + 20));
-      ledger.setAttribute('y1', String(ledgerY));
-      ledger.setAttribute('y2', String(ledgerY));
-      ledger.setAttribute('stroke', 'white');
-      ledger.setAttribute('stroke-width', '2');
-      svg.appendChild(ledger);
-    }
-  }
-
-  // Draw note head (filled circle)
-  const noteHead = document.createElementNS(
-    'http://www.w3.org/2000/svg',
-    'ellipse',
-  );
-  noteHead.setAttribute('cx', String(noteX));
-  noteHead.setAttribute('cy', String(noteY));
-  noteHead.setAttribute('rx', '10');
-  noteHead.setAttribute('ry', '8');
-  noteHead.setAttribute('fill', 'white');
-  noteHead.setAttribute('transform', `rotate(-20 ${noteX} ${noteY})`);
-  svg.appendChild(noteHead);
-
-  // Draw note stem
-  const stem = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-  stem.setAttribute('x1', String(noteX + 9));
-  stem.setAttribute('x2', String(noteX + 9));
-  stem.setAttribute('y1', String(noteY));
-  stem.setAttribute('y2', String(noteY - 50));
-  stem.setAttribute('stroke', 'white');
-  stem.setAttribute('stroke-width', '2');
-  svg.appendChild(stem);
 }
 
 window.newProblem = (wasCorrect: boolean) => {
