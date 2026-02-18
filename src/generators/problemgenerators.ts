@@ -43,7 +43,7 @@ initFilter();
 export function getSelectedCategories() {
   let filter = new Set();
   for (let key of (
-    Cookies.get('filter') ?? 'ab'
+    Cookies.get('filter') ?? 'bt'
   ).split('')) {
     if (Object.keys(generatorConfig).includes(key)) filter.add(key);
   }
