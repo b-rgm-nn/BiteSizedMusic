@@ -8,7 +8,7 @@ import {
 
 import { getStats, recordPlayed } from './stats.js';
 import Cookies from 'js-cookie';
-import { drawNote } from './noterendering.js';
+import { drawNote } from './rendering/noterendering.js';
 
 declare global {
   interface Window {
