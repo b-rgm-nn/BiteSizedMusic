@@ -1,10 +1,4 @@
-import { GeneratorResult } from './problemgenerators.js';
-
-export type Note = {
-  name: string;
-  number: number;
-  clef: 'treble' | 'bass';
-};
+import type { Clef, GeneratorResult } from "./generators.types";
 
 export function toNoteNumber(noteName: string): number {
   let noteIndex = 'CDEFGAB'.indexOf(noteName.charAt(0));
@@ -19,7 +13,7 @@ export function toNoteName(noteNumber: number): string {
   return noteNames[noteIndex] + octave;
 }
 
-function generateNote(minNoteName: string, maxNoteName: string, clef: 'treble' | 'bass'): GeneratorResult {
+function generateNote(minNoteName: string, maxNoteName: string, clef: Clef): GeneratorResult {
   const notePosition = Math.floor(Math.random() * (toNoteNumber(maxNoteName) - toNoteNumber(minNoteName) + 1)) + toNoteNumber(minNoteName);
   return {
     title: 'Notes',
@@ -43,5 +37,12 @@ export function generateTrebleNotes(): GeneratorResult {
   return {
     ...generateNote('C4', 'C6', 'treble'),
     title: 'Treble Notes',
+  };
+}
+
+export function generateAltoNotes(): GeneratorResult {
+  return {
+    ...generateNote('C3', 'E5', 'alto'),
+    title: 'Alto Notes',
   };
 }

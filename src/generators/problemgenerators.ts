@@ -1,20 +1,15 @@
 import { cookiesSetSafe } from '../stats.js';
 import Cookies from 'js-cookie';
 import {
+  generateAltoNotes,
   generateBassNotes,
   generateTrebleNotes,
-  Note,
 } from './notegenerator.js';
-
-export type GeneratorResult = {
-  title: string;
-  note: Note;
-  answer: string;
-};
 
 export const generatorConfig = {
   b: { generators: [generateBassNotes], name: 'Bass clef (C2-C4)' },
   t: { generators: [generateTrebleNotes], name: 'Treble clef (C4-C6)' },
+  a: { generators: [generateAltoNotes], name: 'Alto clef (C3-E5)' },
 };
 
 export function generators() {
@@ -42,9 +37,7 @@ initFilter();
 
 export function getSelectedCategories() {
   let filter = new Set();
-  for (let key of (
-    Cookies.get('filter') ?? 'bt'
-  ).split('')) {
+  for (let key of (Cookies.get('filter') ?? 'bta').split('')) {
     if (Object.keys(generatorConfig).includes(key)) filter.add(key);
   }
   return [...filter].sort().join('');

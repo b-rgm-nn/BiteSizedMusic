@@ -1,4 +1,12 @@
-import { Note, toNoteNumber } from './generators/notegenerator';
+import type { Note } from '../generators/generators.types';
+import { toNoteNumber } from '../generators/notegenerator';
+import type { ClefDrawingConfig } from './rendering.types';
+
+const clefDrawingConfig: ClefDrawingConfig = {
+  bass: { draw: drawBassClef, baseNote: 'G2' },
+  treble: { draw: drawTrebleClef, baseNote: 'E4' },
+  alto: { draw: drawAltoClef, baseNote: 'F3' },
+} as const;
 
 function drawStaffLines(
   svg: SVGSVGElement,
@@ -42,6 +50,18 @@ function drawTrebleClef(
   clef.setAttribute('fill', 'white');
   clef.setAttribute('font-family', 'serif');
   clef.textContent = '𝄞';
+  svg.appendChild(clef);
+  return clef;
+}
+
+function drawAltoClef(svg: SVGSVGElement, staffY: number, lineSpacing: number) {
+  const clef = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  clef.setAttribute('x', String(30));
+  clef.setAttribute('y', String(staffY + lineSpacing * 4));
+  clef.setAttribute('font-size', '90');
+  clef.setAttribute('fill', 'white');
+  clef.setAttribute('font-family', 'serif');
+  clef.textContent = '𝄡';
   svg.appendChild(clef);
   return clef;
 }
@@ -123,16 +143,9 @@ export function drawNote(note: Note, svg: SVGSVGElement) {
 
   drawStaffLines(svg, staffY, lineSpacing);
 
-  let clef: SVGTextElement;
-  let baseNoteNumber: number;
-
-  if (note.clef === 'bass') {
-    clef = drawBassClef(svg, staffY, lineSpacing);
-    baseNoteNumber = toNoteNumber('G2');
-  } else {
-    clef = drawTrebleClef(svg, staffY, lineSpacing);
-    baseNoteNumber = toNoteNumber('E4');
-  }
+  const drawingConfig = clefDrawingConfig[note.clef];
+  const clef = drawingConfig.draw(svg, staffY, lineSpacing);
+  const baseNoteNumber = toNoteNumber(drawingConfig.baseNote);
 
   const noteX =
     clef.getBBox().x +
